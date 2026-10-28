@@ -6,7 +6,7 @@ const { CityMiddleWares } = require('../../middlewares');
 
 const router = express.Router();
 
-//   /api/v1/city POST 
+//   /api/v1/cities POST 
 router.post('/',
     CityMiddleWares.validateCreateRequest,
     CityController.createcity);

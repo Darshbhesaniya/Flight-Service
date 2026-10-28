@@ -31,34 +31,39 @@ async function createFlight(data) {
 async function getAllFlights(query) {
     let customFilter = {};
     let sortFilter = [];
-    const endingTripTime = " 23:59:00"
-    // trips=MUM-DEL
+    const endingTripTime = " 23:59:00";
+
+    // Filter by route: trips=MUM-DEL (departure-arrival airport codes)
     if (query.trips) {
 
         [departureAirportId, arrivalAirportId] = query.trips.split("-");
         customFilter.departureAirportId = departureAirportId;
         customFilter.arrivalAirportId = arrivalAirportId;
-        // TODO: add a check that they are not same
+        
     }
-    if (query.price) {
-        [minPrice, maxPrice] = query.price.split("-");
+    // Filter by price range: price=5000-10000 or price=5000- (min only, max defaults to 20000)
+        if (query.price) {
+            [minPrice, maxPrice] = query.price.split("-");
 
         customFilter.price = {
             [Op.between]: [minPrice, ((maxPrice == undefined) ? 20000 : maxPrice)]
         }
     }
-    if(query.travellers){
-        customFilter.totalSeats = {
+    // Filter by minimum capacity: travellers=4 (flights with totalSeats >= 4)
+        if(query.travellers){
+            customFilter.totalSeats = {
             [Op.gte]: query.travellers
         }
     }
-    if(query.tripDate){
-        customFilter.departureTime = {
+    // Filter by departure date: tripDate=2025-07-15 (matches entire day 00:00:00 to 23:59:00)
+        if(query.tripDate){
+            customFilter.departureTime = {
             [Op.between]: [query.tripDate, query.tripDate + endingTripTime]
         }
     }
-    if(query.sort){
-        const params = query.sort.split(",");
+    // Sort results: sort=price_asc,departureTime_desc (comma-separated, field_order)
+        if(query.sort){
+            const params = query.sort.split(",");
         const sortFilters = params.map((param) => param.split('_'));
         sortFilter = sortFilters
     }

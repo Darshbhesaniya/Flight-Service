@@ -25,13 +25,13 @@ async function createFlight(req, res) {
             departureAirportId: req.body.departureAirportId,
             arrivalAirportId: req.body.arrivalAirportId,
             arrivalTime: req.body.arrivalTime,
-            departureTime: req.body.departureTime,
+            departureTime: req.body.departureTime,  
             price: req.body.price,
             boardingGate: req.body.boardingGate,
             totalSeats: req.body.totalSeats
         });
         SuccessResponse.data = flight
-        SuccessResponse.message = "Successfully created an Airplane"
+        SuccessResponse.message = "Successfully created a Flight"
 
         return res
             .status(StatusCodes.CREATED)
@@ -89,7 +89,7 @@ async function getFlight(req, res) {
 async function updateSeats(req, res) {
     try {
         const response = await FlightService.updateSeats({
-            flightId: req.params.id,
+            flightId: req.params.id,    
             seats: req.body.seats,
             dec: req.body.dec
         })
